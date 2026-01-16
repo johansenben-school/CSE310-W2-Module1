@@ -81,6 +81,8 @@ class Game {
           //is index within bounds?
           if (startIndex + x + y * 8 < 0 || startIndex + x + y * 8 >= 64)
             continue;
+          if (startIndex % 8 + x < 0 || startIndex % 8 + x >= 8)
+            continue;
 
           //is target square empty?
           if (board.getPieceType(endIndex) == Board.PieceType.EMPTY)
@@ -105,6 +107,8 @@ class Game {
 
           //is index within bounds?
           if (startIndex + x * 2 + y * 8 * 2 < 0 || startIndex + x * 2 + y * 8 * 2 >= 64)
+            continue;
+          if (startIndex % 8 + x * 2 < 0 || startIndex % 8 + x * 2 >= 8)
             continue;
 
           PieceType jumpOver = board.getPieceType(startIndex + x + y * 8);
