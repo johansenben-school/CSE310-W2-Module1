@@ -151,19 +151,32 @@ class GameManager extends JFrame {
   
   public void click(int row, int col) {
     int i = row * 8 + col;
+
+    //select square
     if (canSelect(i) && (board.selected == -1 || !canDoubleJump)) {
         board.selected = i;
-    } else {
+    } 
+    //move
+    else {
+      //regular move
       if (isValidMove(board.selected, i)) {
         movePiece(board.selected, row * 8 + col);
         switchTurn();
         board.selected = -1;
-      } else if (isValidJump(board.selected, i)) {
+      } 
+      //jump
+      else if (isValidJump(board.selected, i)) {
         jump(board.selected, i);
-        if (!canDoubleJump) {
+        if (!canDoubleJump) {//switch turn if not double jump
           board.selected = -1;
           switchTurn();
         }
+      } 
+      //end turn if able to double jump
+      else if (canDoubleJump) {
+        board.selected = -1;
+        switchTurn();
+        canDoubleJump = false;
       }
     }
   }
