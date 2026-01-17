@@ -3,9 +3,9 @@ package Checkers;
 import java.util.Scanner;
 
 import Checkers.Board.PieceType;
+import javax.swing.JFrame;
 
-
-class Game {
+class Game extends JFrame {
   //for inputs when running with console
   static Scanner scanner = new Scanner(System.in);
 
@@ -18,18 +18,24 @@ class Game {
     UNINITIALIZED,
     STOPPED
   }
-  State state = State.UNINITIALIZED;
+  State state = State.TURN_WHITE;
   //extra state variables to handle double jump (its probably possible to use only 1 for just double jump)
   boolean jumpOnly = false;
   boolean canSelectDifferentPiece = true;
 
   //data
   Board board;
-  int selected = -1;
 
   //constructor
   public Game() {
-    board = new Board();
+    board = new Board(this);
+
+    setTitle("Checkers");
+    setDefaultCloseOperation(EXIT_ON_CLOSE);
+    setLocationRelativeTo(null);
+    add(board);
+    pack();
+    setVisible(true);
   }
 
   //switch turn; could be simplified if turn was stored as a separate int; for example turn = (turn + 1) % 2, where turn is 0 or 1
@@ -38,7 +44,8 @@ class Game {
     else if (state == State.TURN_BLACK) state = State.TURN_WHITE;
   }
   //user can only select a piece that is the correct color for the turn
-  boolean canSelect(int index) {
+  boolean canSelect(int index) {System.out.println(index+" "+state+" "+board.getPieceType(index));
+  System.out.println((state == State.TURN_WHITE && board.isPieceWhite(index)) || (state == State.TURN_BLACK && board.isPieceBlack(index)));
     return (state == State.TURN_WHITE && board.isPieceWhite(index)) || (state == State.TURN_BLACK && board.isPieceBlack(index));
   }
   //use console inputs to select a piece
@@ -129,7 +136,7 @@ class Game {
     return false;
   }
   void jump(int startIndex, int endIndex) {
-    move(startIndex, endIndex);
+    movePiece(startIndex, endIndex);
     int delta = startIndex - endIndex;
     //find the piece that is being jumped over and remove it
     switch (delta) {
@@ -150,7 +157,7 @@ class Game {
     for (int y = -2; y <= 2; y += 4) {
       for (int x = -2; x <= 2; x += 4) {
         if (isValidJump(endIndex, endIndex + y * 8 + x)) {
-          selected = endIndex;
+          board.selected = endIndex;
           jumpOnly = true;
           canSelectDifferentPiece = false;
           return;
@@ -158,7 +165,7 @@ class Game {
       }
     }
   }
-  void move(int startIndex, int endIndex) {
+  void movePiece(int startIndex, int endIndex) {
     //set new piece
     board.setPiece(endIndex, board.getPieceType(startIndex));
     //set old piece
@@ -189,7 +196,7 @@ class Game {
 
   }
   void movePieceWithConsole() {
-    if (selected == -1)
+    if (board.selected == -1)
       return;
     
     while (true) {
@@ -209,12 +216,12 @@ class Game {
       }
       //select a differnt piece
       else if (canSelectDifferentPiece && in.equals("s")) {
-        selected = -1;
+        board.selected = -1;
         break;
       }
       //end turn when able to double jump
       else if (jumpOnly && in.equals("e")) {
-        selected = -1;
+        board.selected = -1;
         switchTurn();
         canSelectDifferentPiece = true;
         jumpOnly = false;
@@ -227,17 +234,17 @@ class Game {
       int index = in.charAt(0) - '0' + (in.charAt(1) - '0') * 8;
 
       //if valid move -> move
-      if (isValidMove(selected, index)) {
-        move(selected, index);
+      if (isValidMove(board.selected, index)) {
+        movePiece(board.selected, index);
         switchTurn();
-        selected = -1;
+        board.selected = -1;
       } 
       //if valid jump -> jump
-      else if (isValidJump(selected, index)) {
-        jump(selected, index);
+      else if (isValidJump(board.selected, index)) {
+        jump(board.selected, index);
         jumpOnly = false;
         canSelectDifferentPiece = true;
-        selected = -1;
+        board.selected = -1;
         switchTurn();
       }
       break;
@@ -245,11 +252,10 @@ class Game {
   }
 
   public void runWithConsole() {
-    state = State.TURN_WHITE;
     //game loop
     while (state != State.STOPPED) {
       //draw
-      board.draw(selected);
+      board.draw(board.selected);
 
       //white or black wins?
       if (state == State.WIN_WHITE) {
@@ -263,14 +269,32 @@ class Game {
       }
 
       //piece already selected
-      if (selected != -1) {
+      if (board.selected != -1) {
         movePieceWithConsole();
         continue;
       } 
       //piece not selected
       else {
-        selected = selectPieceWithConsole();
+        board.selected = selectPieceWithConsole();
         continue;
+      }
+    }
+  }
+  public void click(int row, int col) {
+    int i = row * 8 + col;
+    if (canSelect(i) && (board.selected == -1 || canSelectDifferentPiece)) {System.out.println("b");
+        board.selected = i;
+    } else {
+      if (isValidMove(board.selected, i)) {
+        movePiece(board.selected, row * 8 + col);System.out.println("a");
+        switchTurn();
+        board.selected = -1;
+      } else if (isValidJump(board.selected, i)) {
+        jump(board.selected, i);
+        jumpOnly = false;
+        canSelectDifferentPiece = true;
+        board.selected = -1;
+        switchTurn();
       }
     }
   }
