@@ -1,9 +1,9 @@
 # Overview
-2 player Checkers game in java
+2 player Checkers game in java by Ben Johansen
 
 I originally started the project by doing everything with console inputs/outputs, but I changed it to use graphics and events with the Java Swing Library
 
-[Software Demo Video](http://youtube.link.goes.here)
+[Software Demo Video](https://youtu.be/cfI-_s0yDlQ)
 
 # Development Environment
 
