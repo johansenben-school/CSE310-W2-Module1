@@ -31,7 +31,7 @@ class Board extends JPanel {
   public int selected = -1;
   int squareWidth = 100;
   int pieceWidth = 80;
-  public Board(Game game) {
+  public Board(GameManager game) {
     //initialize board
     for (int y = 0; y < 8; y++) {
       for (int x = 0; x < 8; x++) {
@@ -95,25 +95,6 @@ class Board extends JPanel {
   }
   public boolean isPieceBlack(int index) {
     return pieces[index] == PieceType.BLACK || pieces[index] == PieceType.BLACK_KING;
-  }
-
-  //draw the board in the console
-  public void draw(int selectedIndex) {
-    System.out.print("  ");
-    for (int x = 0; x < 8; x++)
-      System.out.print("   " + x + "  ");
-    System.out.println();
-    for (int y = 0; y < 8; y++) {
-      System.out.println("  " + "-".repeat(6 * 8 + 1));
-      System.out.print(y + " ");
-      for (int x = 0; x < 8; x++) {
-        int i = y * 8 + x;
-        System.out.print("| " + (i == selectedIndex ? "\u001B[33m" : "") +pieces[i].c + (i == selectedIndex ? "\u001B[0m " : " "));
-      }
-      System.out.println("|");
-    }
-    System.out.println("  " + "-".repeat(6 * 8 + 1));
-
   }
   
 }

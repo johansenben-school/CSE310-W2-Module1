@@ -1,11 +1,7 @@
 # Overview
-Checkers game in java
+2 player Checkers game in java
 
-{Provide a description of your software}
-
-{Describe your purpose for creating this software.}
-
-{Provide a link to your YouTube demonstration.  It should be a one minute demo of the software running and a walkthrough of the code.}
+I originally started the project by doing everything with console inputs/outputs, but I changed it to use graphics and events with the Java Swing Library
 
 [Software Demo Video](http://youtube.link.goes.here)
 
@@ -17,6 +13,5 @@ Checkers game in java
 
 # Useful Websites
 
-{Make a list of websites that you found helpful in this project}
-* [Web Site Name](http://url.link.goes.here)
-* [Web Site Name](http://url.link.goes.here)
+* [Geeks For Geeks - Java Swing Tutorial](https://www.geeksforgeeks.org/java/introduction-to-java-swing/)
+* [Tutorialspoint - MouseAdapter Tutorial](https://www.tutorialspoint.com/swing/swing_mouseadapter.htm)
