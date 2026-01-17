@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import javax.swing.JPanel;
 
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 class Board extends JPanel {
   public static enum PieceType {
@@ -24,7 +25,7 @@ class Board extends JPanel {
     }
   }
 
-  PieceType[] pieces = new PieceType[64];
+  ArrayList<PieceType> pieces = new ArrayList<PieceType>(64);
   public int selected = -1;
   int squareWidth = 100;
   int pieceWidth = 80;
@@ -35,13 +36,13 @@ class Board extends JPanel {
         int i = y * 8 + x;
         if ((x + y) % 2 != 0) {
           if (y < 2)
-            pieces[i] = PieceType.BLACK;
+            pieces.add(PieceType.BLACK);
           else if (y >= 6)
-            pieces[i] = PieceType.WHITE;
+            pieces.add(PieceType.WHITE);
           else
-            pieces[i] = PieceType.EMPTY;
+            pieces.add(PieceType.EMPTY);
         } else {
-          pieces[i] = PieceType.EMPTY;
+          pieces.add(PieceType.EMPTY);
         }
       }
     }
@@ -76,7 +77,7 @@ class Board extends JPanel {
         g.fillRect(x * squareWidth, y * squareWidth, squareWidth, squareWidth);
 
         //skip drawing a piece if square is empty
-        if (pieces[y * 8 + x] == PieceType.EMPTY)
+        if (pieces.get(y * 8 + x) == PieceType.EMPTY)
           continue;
 
         //draw piece
@@ -84,7 +85,7 @@ class Board extends JPanel {
         g.fillOval(x * squareWidth + (squareWidth - pieceWidth) / 2, y * squareWidth + (squareWidth - pieceWidth) / 2, pieceWidth, pieceWidth);
         
         //add crown if piece is a king
-        if (pieces[y * 8 + x] == PieceType.WHITE_KING || pieces[y * 8 + x] == PieceType.BLACK_KING) {
+        if (pieces.get(y * 8 + x) == PieceType.WHITE_KING || pieces.get(y * 8 + x) == PieceType.BLACK_KING) {
           int[] xPoints = { x * squareWidth + 30, x * squareWidth + 30, x * squareWidth + 40, x * squareWidth + 50, (x + 1) * squareWidth - 40, (x + 1) * squareWidth - 30, (x + 1) * squareWidth - 30 };
           int[] yPoints = { (y + 1) * squareWidth - 30, y * squareWidth + 30, y * squareWidth + 50, y * squareWidth + 30, y * squareWidth + 50, y * squareWidth + 30, (y + 1) * squareWidth - 30 };
 
@@ -95,16 +96,16 @@ class Board extends JPanel {
     }
   }
   public PieceType getPieceType(int index) {
-    return pieces[index];
+    return pieces.get(index);
   }
   public void setPiece(int index, PieceType type) {
-    pieces[index] = type;
+    pieces.set(index, type);
   }
   public boolean isPieceWhite(int index) {
-    return pieces[index] == PieceType.WHITE || pieces[index] == PieceType.WHITE_KING;
+    return pieces.get(index) == PieceType.WHITE || pieces.get(index) == PieceType.WHITE_KING;
   }
   public boolean isPieceBlack(int index) {
-    return pieces[index] == PieceType.BLACK || pieces[index] == PieceType.BLACK_KING;
+    return pieces.get(index) == PieceType.BLACK || pieces.get(index) == PieceType.BLACK_KING;
   }
   
 }
